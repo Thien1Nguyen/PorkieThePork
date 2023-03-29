@@ -1,145 +1,143 @@
-console.log("Linked!")
-// import { Player } from './player.js';
-// import { Controls } from './controls.js';
+// setting up the canvas
+const canvas = document.querySelector('#space')
+const c = canvas.getContext('2d')
 
-window.addEventListener('load', function(){
-    const canvas = document.getElementById('world');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 1024;
-    canvas.height = 576;
+canvas.width = 1024;
+canvas.height = 576;
 
-    class Game{
-        constructor(width, height){
-            this.width = width;
-            this.height = height;
-            this.player = new Player(this); // Might have to change this for multi classes
-            this.projectile = new Projectile(this.player);
-            this.control = new Controls();
-        }
-
-        update(){
-            this.player.update(this.control.keys);
-            this.projectile.update(this.control);
-        }
-
-        draw(context){
-            this.player.draw(context);
-            this.projectile.draw(context);
-        }
-    }
-
-    const game = new Game(canvas.width, canvas.height);
-    console.log(game);
-
-    function animate(){
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0,0, canvas.width, canvas.height)
-        game.update();
-        game.draw(ctx);
-        requestAnimationFrame(animate);
-    }
-    animate();
-});
-
+// creating a player class (image, radius, position, velocity)
 class Player{
-    constructor(game){
-        this.game = game;
+    constructor(){
+        //this sprite
+        const image = new Image()
+        this.image = document.querySelector('#player')
         // this.width = 50;
         // this.height = 50;
         this.radius = 20;
-        this.x = (this.game.width/2) - (this.radius);
-        this.y = (this.game.height/2) - (this.radius);
-        // this.image = document.querySelector('#player');
-        this.speed = 5;
-}
-    update(control){
-        if(control.includes('d')){
-            this.x += this.speed;
-        }
-        else if (control.includes('a')){
-            this.x -= this.speed;
-        }
-        if (control.includes('w')){
-            this.y -= this.speed;
-        }
-        else if (control.includes('s')){
-            this.y += this.speed;
-        }
-        if(control.includes('Shift')){
-            this.x = (this.game.width/2) - (this.radius/2);
-            this.y = (this.game.height/2) - (this.radius/2);
-            console.log(this.x, this.y)
+
+        this.position = {
+            x: canvas.width/2 - this.radius,
+            y: canvas.height/2 - this.radius
         }
         
-        if(this.x - this.radius < 0){
-            this.x = this.radius;
-        }
-        if(this.x > this.game.width - this.radius){
-            this.x = this.game.width - this.radius;
-        }
-        if(this.y - this.radius< 0){
-            this.y = this.radius;
-        }
-        if(this.y > this.game.height - this.radius){
-            this.y = this.game.height - this.radius;
+    
+        this.velocity={
+            x: 0,
+            y: 0
         }
     }
-    draw(context){
-        context.beginPath();
-        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        context.fillStyle = 'grey';
-        context.fill()
-        // context.fillStyle = "pink";
-        // context.drawImage(this.image, this.x, this.y, 50, 50);
+    // a draw method to draw the play onto the canvas
+    draw() {
+        // c.fillStyle = 'red'
+        // c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        c.beginPath();
+        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
+        c.fillStyle = 'pink';
+        c.fill()
+        c.drawImage(this.image, this.position.x, this.position.y,this.width, this.height)
     }
-};
-
-
-// controls
-class Controls{
-    constructor(){
-        this.keys = [];
-        window.addEventListener('keydown', e =>{
-            if((    e.key === 'w' ||
-                    e.key === 's' ||
-                    e.key === 'a' ||
-                    e.key === 'd' ||
-                    e.key === 'Shift'   
-                ) && this.keys.indexOf(e.key) === -1){
-                    this.keys.push(e.key);
-                    }
-            console.log(e.key, this.keys)
-            });
-
-        window.addEventListener('keyup', e =>{
-            if(     e.key === 'w' ||
-                    e.key === 's' ||
-                    e.key === 'a' ||
-                    e.key === 'd' ||
-                    e.key === 'Shift'){
-                this.keys.splice(this.keys.indexOf(e.key), 1);
-                }
-                console.log(e.key,this.keys)
-            });
-        }
+    // an update method to change the player position and then re-draw the player with new into
+    update(){
+        this.draw();
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
     }
-class Projectile {
-    constructor(player){
-        this.attacks=[]
-        this.x = player.x;
-        this.y = player.y;
-        this.speed = player.speed;
-        this.radius = 5;
-    }
-    draw(context){
-        context.beginPath();
-        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        context.fillStyle = 'red';
-        context.fill()
-    }
-    update(control){
-        this.x += 0;
-        this.y += 0;
-    }
-
 }
+
+// creating our player OBJECT
+const player = new Player();
+
+// creating a key array to check which key is currently being pressed
+const keys = {
+    w:{
+        pressed: false
+    },
+    s:{
+        pressed: false
+    },
+    a:{
+        pressed: false
+    },
+    d:{
+        pressed: false
+    },
+    Shift:{
+        pressed: false
+    }
+}
+
+// creating an function to animate the canvas
+function animate(){
+    requestAnimationFrame(animate)
+    c.fillStyle= 'black'
+    c.fillRect(0,0, canvas.width, canvas.height)
+    player.update();
+    if (keys.w.pressed && player.position.y - player.radius>= 0){
+        player.velocity.y = -5;
+    }  
+    else if(keys.s.pressed && player.position.y + player.radius <= canvas.height){
+        player.velocity.y = 5;
+    } 
+    else{
+        player.velocity.y = 0;
+    }
+    if (keys.a.pressed && player.position.x >= player.radius){
+        player.velocity.x = -5;
+    }  
+    else if(keys.d.pressed && player.position.x + player.radius  <= canvas.width){
+        player.velocity.x = 5;
+    } 
+    else{
+        player.velocity.x = 0;
+    }
+    
+}
+
+// calling the animate function
+animate();
+
+// eventlistener for keypress
+window.addEventListener('keydown', ({key}) =>{
+    switch (key){
+        case 'w':
+            keys.w.pressed = true;
+            break;
+        case 's':
+            keys.s.pressed = true;
+            break;
+        case 'a':
+            keys.a.pressed = true;
+            break;
+        case 'd':
+            keys.d.pressed = true;
+            break;
+        case 'Shift':
+            keys.Shift.pressed = true;
+            player.position.x = canvas.width/2;
+            player.position.y = canvas.height/2;
+            break;                     
+    }
+})
+
+// eventlistener for keyreleased
+window.addEventListener('keyup', ({key}) =>{
+    switch (key){
+        case 'w':
+            keys.w.pressed = false;
+            break;
+        case 's':
+                keys.s.pressed = false;
+                break;
+        case 'a':
+            keys.a.pressed = false;
+            break;
+        case 'd':
+            keys.d.pressed = false;
+            break;
+        case 'Shift':
+            keys.Shift.pressed = false;
+            player.position.x = canvas.width/2;
+            player.position.y = canvas.height/2;
+            break;                     
+    }
+})
