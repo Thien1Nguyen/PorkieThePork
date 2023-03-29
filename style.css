@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap');
+*{
+    padding: 0;
+    margin: 0;
+    font-family: 'Balsamiq Sans', cursive;
+}
+
+body{
+    background-color: rgb(19, 17, 14);
+}
+
+
+.gameBanner{
+    background-color:black;
+    font-size: 40pt;
+    text-align: center;
+    text-decoration: underline;
+    color: white;
+    text-shadow: #FC0 1px 0 10px;
+    font-weight: bolder;
+    padding: 20px 10px;
+    margin-bottom: 50px;
+}
+
+.gameBoy{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    width: 80%;
+    height: 80%;
+    margin: 0 auto;
+    border-radius: 25px;
+    box-shadow: 5px 5px 50px rgb(121, 121, 121);
+}
+
+/* .dZone{
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+    align-items: center;
+    overflow: hidden;
+}
+.aZone{
+    display: flex;
+    flex: 1;
+    justify-content: space-around;
+    align-items: center;
+    overflow: hidden;
+}
+#dpad{
+    height: 250px;
+    width: 250px;
+} */
+
+#world{
+    border: 6px solid gray;
+    background-color: white;
+    margin: 0 auto;
+    border-radius: 20px;
+}
+#player{
+    display: none;
+}
+
+.infoBar{
+    display: flex;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+}
+/* .gameBox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color:black;
+}
+
+
+div.row div{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+
+}
+
+.brick{
+    background-color:blanchedalmond;
+}
+.player{
+    width: 40px;
+    height: 40px;
+} */
