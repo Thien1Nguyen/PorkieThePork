@@ -221,7 +221,7 @@ function spawnEnemies(){
         const y = 0;
         const radius = 40;
         const color = 'pink';
-        const speed = 5d;
+        const speed = 5;
             
         const angle = Math.atan2(y + player.position.y, x + player.position.x);
         const velocity = {
