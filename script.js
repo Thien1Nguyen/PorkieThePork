@@ -199,8 +199,18 @@ class Enemy{
         }
     
         update(){
+            if(this.x > player.position.x){
+                this.x -= this.velocity.x * this.speed;  
+            }
+            else if(this.x < player.position.x){
             this.x += this.velocity.x * this.speed;
+            }
+            if(this.y > player.position.y){
+                this.y -= this.velocity.y * this.speed;  
+            }
+            else if(this.y < player.position.y){
             this.y += this.velocity.y * this.speed;
+            }
             this.draw();
         }
     }
@@ -211,7 +221,7 @@ function spawnEnemies(){
         const y = 0;
         const radius = 40;
         const color = 'pink';
-        const speed = 2;
+        const speed = 5d;
             
         const angle = Math.atan2(y + player.position.y, x + player.position.x);
         const velocity = {
