@@ -2,15 +2,15 @@
 const canvas = document.querySelector('#space')
 const c = canvas.getContext('2d')
 
-canvas.width = 1024;
-canvas.height = 576;
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
 // creating a player class (image, radius, position, velocity)
 class Player{
     constructor(){
         //this sprite
         const image = new Image()
-        this.image = document.querySelector('#player')
+        // this.image = document.querySelector('#player')
         // this.width = 50;
         // this.height = 50;
         this.radius = 20;
@@ -32,9 +32,9 @@ class Player{
         // c.fillRect(this.position.x, this.position.y, this.width, this.height)
         c.beginPath();
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
-        c.fillStyle = 'pink';
+        c.fillStyle = 'yellow';
         c.fill()
-        c.drawImage(this.image, this.position.x, this.position.y,this.width, this.height)
+        // c.drawImage(this.image, this.position.x, this.position.y,this.width, this.height)
     }
     // an update method to change the player position and then re-draw the player with new into
     update(){
@@ -66,12 +66,17 @@ const keys = {
     }
 }
 
+
 // creating an function to animate the canvas
 function animate(){
     requestAnimationFrame(animate)
     c.fillStyle= 'black'
     c.fillRect(0,0, canvas.width, canvas.height)
     player.update();
+    attacks.forEach(attack => {attack.update() })
+    mobs.forEach(enimies=> {enimies.update() })
+
+    // control update
     if (keys.w.pressed && player.position.y - player.radius>= 0){
         player.velocity.y = -5;
     }  
@@ -93,8 +98,6 @@ function animate(){
     
 }
 
-// calling the animate function
-animate();
 
 // eventlistener for keypress
 window.addEventListener('keydown', ({key}) =>{
@@ -141,3 +144,103 @@ window.addEventListener('keyup', ({key}) =>{
             break;                     
     }
 })
+
+//Attacks
+
+class Attack{
+    constructor(player, x, y, radius, color, velocity, speed){
+        let rgb = ['red','blue', 'green', 'purple', 'white']
+        this.player = player
+        this.x = player.position.x;
+        this.y = player.position.y;
+        this.radius = radius;
+        this.color = color;
+        this.velocity = velocity;
+        this.speed = speed
+    }
+
+    draw() {
+        // c.fillStyle = 'red'
+        // c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        c.beginPath();
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        c.fillStyle = this.color;
+        c.fill()
+        // c.drawImage(this.image, thisx, this.y,this.width, this.height)
+    }
+
+    update(){
+        this.x = this.x + this.velocity.x * this.speed;
+        this.y = this.y + this.velocity.y * this.speed;
+        this.draw();
+    }
+}
+
+class Enemy{
+        constructor(player, x, y, radius, color, velocity, speed){
+            let rgb = ['red','blue', 'green', 'purple', 'white']
+            this.player = player
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = color;
+            this.velocity = velocity;
+            this.speed = speed
+        }
+    
+        draw() {
+            // c.fillStyle = 'red'
+            // c.fillRect(this.position.x, this.position.y, this.width, this.height)
+            c.beginPath();
+            c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            c.fillStyle = this.color;
+            c.fill()
+            // c.drawImage(this.image, thisx, this.y,this.width, this.height)
+        }
+    
+        update(){
+            this.x += this.velocity.x * this.speed;
+            this.y += this.velocity.y * this.speed;
+            this.draw();
+        }
+    }
+
+function spawnEnemies(){
+    setInterval(()=>{
+        const x = 0;
+        const y = 0;
+        const radius = 40;
+        const color = 'pink';
+        const speed = 2;
+            
+        const angle = Math.atan2(y + player.position.y, x + player.position.x);
+        const velocity = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
+        };
+        mobs.push(new Enemy(player, x, y, radius, color, velocity, speed))
+
+        },1000)
+    }
+
+
+// const attack = new Attack(player, canvas.width/2, canvas.height/2, 5, 'red', {x:1, y:1})
+const attacks = [];
+const mobs = [];
+
+// let the player cast an ATTACK once the mouse is clicked
+addEventListener('click', (e) =>{
+        const angle = Math.atan2(e.clientY - player.position.y, e.clientX - player.position.x )
+        const velocity = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
+        }
+        let rgb = ["red", "blue", "green", "purple", "white"];
+        let colorRandom = rgb[Math.round((Math.random()* 4))];
+        console.log(colorRandom)
+        console.log(e.clientX,e.clientY)
+        attacks.push(new Attack(player, player.position.x , player.position.y, (Math.random()* 50) + 5, colorRandom, velocity, Math.random()* 50))
+    })
+// calling the animate function
+animate();
+spawnEnemies();
