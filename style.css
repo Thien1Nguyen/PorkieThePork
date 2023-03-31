@@ -10,7 +10,7 @@ body {
     background-color: rgb(19, 17, 14);
 }
 
-.UI {
+#UI {
     display: flex;
     background-color: orangered;
     color: white;
@@ -45,83 +45,161 @@ audio {
     right: 2%;
 }
 
-/* .gameBanner{
-    background-color:black;
-    font-size: 40pt;
-    text-align: center;
-    text-decoration: underline;
-    color: white;
+/* util classes */
+
+.hide{
+    display: none !important;
+}
+.blue-text{
+    color: cornflowerblue;
     text-shadow: #FC0 1px 0 10px;
-    font-weight: bolder;
-    padding: 20px 10px;
-    margin-bottom: 50px;
+}
+.pink-text{
+    color: plum;
+    text-shadow: rgb(255, 255, 255) 1px 0 10px;
 }
 
-.gameBoy{
-    display: flex;
+#Borkie{
+    margin-top: 10%;
+    width: 200px;
+    height: 200px;
+}
+
+#Love{
+    margin-top: 10%;
+    width: 200px;
+    height: 200px;
+}
+
+.bold{
+    font-weight: 900;
+    text-decoration: underline;
+    text-decoration-color: rgb(34, 243, 243);
+    text-decoration-style:wavy
+}
+
+.white{
+    background-color: white;
+    color: black;
+}
+.yellow{
+    background-color: yellow !important;
+}
+.orange{
+    background-color: orange!important;
+}
+.green{
+    background-color: green!important;
+}
+.blue{
+    background-color: navy!important;
+    color: white !important;
+}
+.purple{
+    background-color: purple!important;
+    color: white !important;
+}
+.red{
+    background-color: red!important;
+    color: white !important;
+}
+.brown{
+    background-color: brown!important;
+}
+.black{
+    background-color: black!important;
+    color: white !important;
+}
+/* Info display */
+
+#startBanner{
     justify-content: center;
     align-items: center;
+    position: absolute;
+    top: 25%;
+    left: 20%;
+    background-color: bisque;
+    height: 500px;
+    width: 1000px;
+    border-radius: 15px;
+}
+
+.storyBanner{
     background-color: black;
-    width: 80%;
-    height: 80%;
-    margin: 0 auto;
-    border-radius: 25px;
-    box-shadow: 5px 5px 50px rgb(121, 121, 121);
-} */
-
-/* .dZone{
-    display: flex;
-    flex: 1;
-    justify-content: space-around;
-    align-items: center;
-    overflow: hidden;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 40pt;
 }
-.aZone{
-    display: flex;
-    flex: 1;
-    justify-content: space-around;
-    align-items: center;
-    overflow: hidden;
-}
-#dpad{
-    height: 250px;
-    width: 250px;
-} */
 
-/* #world{
-    border: 6px solid gray;
-    background-color: white;
-    margin: 0 auto;
+.guideBanner{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    background-color: bisque;
+    height: 330px;
+    width: 100% ;
+}
+.guide{
+    list-style: none;
+    background-color: bisque;
+    margin-top: 70px;
+}
+
+li{
+    margin-bottom: 10px;
+}
+
+#strBtn{
+    color: white;
+    background-color: cornflowerblue;
+    border-radius: 10px;
+    margin-left: 400px;
+    width: 200px;
+    height: 100px;
+}
+
+
+/* Game Over! */
+#gameOverBanner{
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 25%;
+    left: 20%;
+    background-color: bisque;
+    height: 500px;
+    width: 1000px;
     border-radius: 20px;
 }
-
-
-.infoBar{
+.endCard{
+        display: flex;
+        gap: 20px;
+        font-size: 100pt;
+        justify-content: center;
+        background-color: bisque;
+        height: 310px;
+        width: 100% ;
+        border-radius: 20px;
+}
+#beltBanner{
     display: flex;
+    width: 99%;
+    height: 50px;
+    border-radius: 15px;
+    font-size: 20pt;
+    align-items: center;
     margin: 0 auto;
-    justify-content: space-between;
-    align-items: center;
-    width: 60%;
-} */
-/* .gameBox{
-    display: flex;
-    align-items: center;
     justify-content: center;
-    background-color:black;
+    background-color: white;
+    margin-bottom: 20px;
 }
-
-
-div.row div{
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-
+#restrBtn{
+        color: white;
+        background-color: plum;
+        border-radius: 10px;
+        margin-left: 400px;
+        width: 200px;
+        height: 100px;
 }
-
-.brick{
-    background-color:blanchedalmond;
-}
-.player{
-    width: 40px;
-    height: 40px;
-} */

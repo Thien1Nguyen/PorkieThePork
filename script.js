@@ -1,17 +1,61 @@
 //audio control
-var bgm = document.getElementById("BGM");
+let bgm = document.getElementById("BGM");
+let popSound = document.getElementById("popSound");
+let gameOverSound = document.getElementById("gameOver")
+
+function beltChange(){
+    if(document.querySelector('.score').innerText > 20){
+        document.getElementById('beltBanner').innerHTML = "Yellow Belt!";
+        document.getElementById('beltBanner').classList.toggle("yellow");
+    }
+    if(document.querySelector('.score').innerText > 30){
+        document.getElementById('beltBanner').innerHTML = "Orange Belt!";
+        document.getElementById('beltBanner').classList.toggle("orange");
+    }
+    if(document.querySelector('.score').innerText > 40){
+        document.getElementById('beltBanner').innerHTML = "Green Belt!";
+        document.getElementById('beltBanner').classList.toggle("green");
+    }
+    if(document.querySelector('.score').innerText > 50){
+        document.getElementById('beltBanner').innerHTML = "Blue Belt!";
+        document.getElementById('beltBanner').classList.toggle("blue");
+    }
+    if(document.querySelector('.score').innerText > 60){
+        document.getElementById('beltBanner').innerHTML = "Purple Belt!";
+        document.getElementById('beltBanner').classList.toggle("purple");
+    }
+    if(document.querySelector('.score').innerText > 70){
+        document.getElementById('beltBanner').innerHTML = "Brown Belt!";
+        document.getElementById('beltBanner').classList.toggle("brown");
+    }
+    if(document.querySelector('.score').innerText > 80){
+        document.getElementById('beltBanner').innerHTML = "Black Belt!";
+        document.getElementById('beltBanner').classList.toggle("black");
+    }
+}
+
 function halfVol() {
     bgm.volume = 0.3;
+    popSound.volume = 0.8;
+    gameOverSound.volume = 0.8;
 }
 
 window.addEventListener('click',()=>{
     bgm.play();
 })
+
+window.addEventListener('load',()=>{
+    bgm.pause();
+})
 halfVol();
+var rgb = ['red','navy','yellow', 'ForestGreen','tomato','DeepPink','SeaGreen','MediumPurple', 'Indigo','SpringGreen','PaleGreen','PapayaWhip','Gold','Bisque'];
+var bw = ['black', 'white']
 // setting up the canvas
 const canvas = document.querySelector('#space')
 const c = canvas.getContext('2d')
 const image = document.querySelector('#bgImg');
+const Bokie = document.querySelector('#Borkie');
+const Love =  document.querySelector('#Love')
 canvas.width = innerWidth * .995;
 canvas.height = innerHeight * .995;
 
@@ -25,7 +69,16 @@ function animate() {
     // c.fillRect(0, 0, canvas.width, canvas.height);
     c.clearRect(0, 0, canvas.width, canvas.height)
     c.drawImage(image, 0, 0, canvas.width, canvas.height)
+    love.update();
     player.update();
+    effects.forEach((effect, index) => {
+        if(effect.alpha <= 0){
+            effects.splice(index, 1)
+        }
+        else {
+        effect.update();
+        }
+    })
     attacks.forEach((attack, Index) => {
         attack.update()
         // console.log(attacks)
@@ -43,16 +96,27 @@ function animate() {
         //GameOver
         if (distanceEnd - player.radius - enemy.radius < 1) {
             bgm.pause();
+            gameOverSound.play();
             cancelAnimationFrame(freezeFrame)
+            beltChange();
+            document.getElementById('gameOverBanner').classList.remove("hide");
         }
 
         // collision detection between enemy and attack
         attacks.forEach((attack, attIndex) => {
             const distance = Math.hypot(attack.x - enemy.x, attack.y - enemy.y)
             if (distance - enemy.radius - attack.radius < 1) {
+                //enemy death effects
+                for(let i = 0; i < Math.random() * 500 + 100; i++){
+                    effects.push(new Effect(enemy.x, enemy.y, Math.random() * 5 + 1, rgb[Math.round(Math.random() * rgb.length)],{x:Math.random()- 0.5, y:Math.random()- 0.5}, Math.random() * 5))
+                }
+                // console.log(effects)
+                //score counter with mobs and attacks hit detect
                 setTimeout(() => {
                     // console.log("a Hit!")
-                    document.querySelector('#score').innerText++;
+                    document.querySelector('.score').innerText++;
+                    document.querySelector('.scoreUI').innerText++;
+                    popSound.play()
                     attacks.splice(attIndex, 1)
                     mobs.splice(eIndex, 1)
                 }, 1)
@@ -91,15 +155,14 @@ function animate() {
     if (keys.space.pressed) {
         player.position.x = canvas.width / 2;
         player.position.y = canvas.height / 2;
-        console.log(attacks)
-        console.log(player.velocity.x, player.velocity.y)
+        // console.log(attacks)
+        // console.log(player.velocity.x, player.velocity.y)
     }
 }
 // creating a player class (image, radius, position, velocity)
 class Player {
     constructor() {
         //this sprite
-        const image = new Image()
         // this.image = document.querySelector('#bgImg')
         // this.width = 50;
         // this.height = 50;
@@ -121,15 +184,15 @@ class Player {
     draw() {
         // c.fillStyle = 'red'
         // c.fillRect(this.position.x, this.position.y, this.width, this.height)
-        c.beginPath();
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
-        c.fillStyle = 'yellow';
-        c.fill()
+        // c.beginPath();
+        // c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
+        // c.fillStyle = 'CornflowerBlue';
+        // c.fill()
         c.beginPath();
         c.arc(this.position.x, this.position.y, this.radius + 0.1, 0, Math.PI * 2, false);
         c.strokeStyle = 'black'
         c.stroke();
-        // c.drawImage(this.image, this.position.x, this.position.y,this.width, this.height)
+        c.drawImage(Bokie, this.position.x - 20, this.position.y - 22, 40, 40)
     }
     // an update method to change the player position and then re-draw the player with new into
     update() {
@@ -139,8 +202,28 @@ class Player {
     }
 }
 
-// creating our player OBJECT
-const player = new Player();
+class Home {
+    constructor(){
+        this.x = canvas.width/2;
+        this.y = canvas.height/2;
+        this.radius = 20;
+    }
+
+    draw() {
+        // c.beginPath();
+        // c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        // c.fillStyle = 'Plum';
+        // c.fill()
+        c.beginPath();
+        c.arc(this.x, this.y, this.radius + 0.1, 0, Math.PI * 2, false);
+        c.strokeStyle = 'white'
+        c.stroke();
+        c.drawImage(Love, this.x - 20, this.y - 22, 40, 40)
+    }
+    update() {
+        this.draw();
+    }
+}
 
 // creating a key array to check which key is currently being pressed
 const keys = {
@@ -227,6 +310,10 @@ class Attack {
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
         c.fillStyle = this.color;
         c.fill()
+        c.beginPath();
+        c.arc(this.x, this.y, this.radius + 0.1, 0, Math.PI * 2, false);
+        c.strokeStyle = 'black'
+        c.stroke();
         // c.drawImage(this.image, thisx, this.y,this.width, this.height)
     }
 
@@ -280,6 +367,42 @@ class Enemy {
     }
 }
 
+class Effect {
+    constructor(x, y, radius, color, velocity,speed) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.velocity = velocity;
+        this.speed = speed;
+        this.alpha = 1;
+    }
+
+    draw() {
+        // c.fillStyle = 'red'
+        // c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        c.save()
+        c.globalAlpha = this.alpha;
+        c.beginPath();
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        c.fillStyle = this.color;
+        c.fill()
+        c.beginPath();
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        c.strokeStyle = 'white';
+        c.stroke()
+        c.restore()
+        // c.drawImage(this.image, thisx, this.y,this.width, this.height)
+    }
+
+    update() {
+        this.x = this.x + this.velocity.x * this.speed;
+        this.y = this.y + this.velocity.y * this.speed;
+        this.draw();
+        this.alpha -= 0.01
+    }
+}
+
 var spawnDelay = 1000;
 var adjustSpawn = (0.1 / 5000) * spawnDelay;
 
@@ -296,7 +419,7 @@ function spawnEnemies() {
         y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
     }
 
-    const color = 'black';
+    const color = bw[Math.round(Math.random() * (bw.length - 1))]
     const speed = 2;
 
     const angle = Math.atan2(y + player.position.y, x + player.position.x);
@@ -304,6 +427,7 @@ function spawnEnemies() {
         x: Math.cos(angle),
         y: Math.sin(angle)
     };
+    // console.log(Math.round(Math.random() * (bw.length - 1)));
     mobs.push(new Enemy(player, x, y, radius, color, velocity, speed))
     if (spawnDelay > 100) {
         spawnDelay = spawnDelay - (spawnDelay * adjustSpawn);
@@ -317,11 +441,28 @@ function spawnEnemies() {
 
 
 
-
+// creating our OBJECTS
+let player = new Player();
+let love = new Home();
 // const attack = new Attack(player, canvas.width/2, canvas.height/2, 5, 'red', {x:1, y:1})
-const attacks = [];
-const mobs = [];
+let attacks = [];
+let mobs = [];
+let effects = [];
 // const lightingFlash = new Attack(player, player.position.x, player.position.y, 30, 'gold', 0, 0)
+
+//reset helper
+function restart(){
+    player = new Player();
+    love = new Home();
+    // const attack = new Attack(player, canvas.width/2, canvas.height/2, 5, 'red', {x:1, y:1})
+    attacks = [];
+    mobs = [];
+    effects = [];
+    spawnDelay = 1000;
+    document.querySelector('.score').innerText = 0;
+    document.querySelector('.scoreUI').innerText = 0;
+    document.getElementById('beltBanner').classList.toggle("white");
+}
 
 // let the player cast an ATTACK once the mouse is clicked
 addEventListener('click', (e) => {
@@ -335,8 +476,21 @@ addEventListener('click', (e) => {
     // console.log(colorRandom)
     // console.log(e.clientX, e.clientY)
     attacks.push(new Attack(player, player.position.x, player.position.y, 10, 'red', velocity, 7))
-    console.log(attacks)
+    // console.log(attacks)
 })
 // calling the animate function
-animate();
-spawnEnemies();
+document.getElementById('strBtn').addEventListener('click',() =>{
+    document.getElementById('startBanner').classList.add("hide");
+    document.getElementById('UI').classList.remove("hide");
+    document.getElementById('space').classList.remove("hide");
+    document.getElementById('UI').classList.remove("hide");
+    animate();
+    spawnEnemies();
+})
+
+document.getElementById('restrBtn').addEventListener('click',() =>{
+    document.getElementById('gameOverBanner').classList.add("hide");
+    restart()
+    animate();
+    spawnEnemies();
+})
