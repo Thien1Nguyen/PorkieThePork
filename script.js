@@ -95,9 +95,9 @@ function animate() {
         const distanceEnd = Math.hypot(player.position.x - enemy.x, player.position.y - enemy.y);
         //GameOver
         if (distanceEnd - player.radius - enemy.radius < 1) {
-            bgm.pause();
             gameOverSound.play();
             cancelAnimationFrame(freezeFrame)
+            bgm.pause();
             beltChange();
             document.getElementById('gameOverBanner').classList.remove("hide");
         }
@@ -108,7 +108,7 @@ function animate() {
             if (distance - enemy.radius - attack.radius < 1) {
                 //enemy death effects
                 for(let i = 0; i < Math.random() * 500 + 100; i++){
-                    effects.push(new Effect(enemy.x, enemy.y, Math.random() * 5 + 1, rgb[Math.round(Math.random() * rgb.length)],{x:Math.random()- 0.5, y:Math.random()- 0.5}, Math.random() * 5))
+                    effects.push(new Effect(enemy.x, enemy.y, Math.random() * 5 + 1, rgb[Math.round(Math.random() * (rgb.length - 1))],{x:Math.random()- 0.5, y:Math.random()- 0.5}, Math.random() * 5))
                 }
                 // console.log(effects)
                 //score counter with mobs and attacks hit detect
@@ -403,8 +403,8 @@ class Effect {
     }
 }
 
-var spawnDelay = 1000;
-var adjustSpawn = (0.1 / 5000) * spawnDelay;
+let spawnDelay = 1000;
+let adjustSpawn = (0.1 / 5000) * spawnDelay;
 
 function spawnEnemies() {
     const radius = 35;
@@ -432,7 +432,7 @@ function spawnEnemies() {
     if (spawnDelay > 100) {
         spawnDelay = spawnDelay - (spawnDelay * adjustSpawn);
     }
-    // console.log(spawnDelay)
+    console.log(spawnDelay)
     setTimeout(() => {
         spawnEnemies();
     }, spawnDelay)
@@ -461,7 +461,6 @@ function restart(){
     spawnDelay = 1000;
     document.querySelector('.score').innerText = 0;
     document.querySelector('.scoreUI').innerText = 0;
-    document.getElementById('beltBanner').classList.toggle("white");
 }
 
 // let the player cast an ATTACK once the mouse is clicked
@@ -489,8 +488,5 @@ document.getElementById('strBtn').addEventListener('click',() =>{
 })
 
 document.getElementById('restrBtn').addEventListener('click',() =>{
-    document.getElementById('gameOverBanner').classList.add("hide");
-    restart()
-    animate();
-    spawnEnemies();
+    location.reload();
 })
